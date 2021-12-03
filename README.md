@@ -28,6 +28,28 @@ Or you can fetch all sent out emails for the given Mailable class.
 Send::byMailClass(ProductReviewMail::class)->get();
 ```
 
+Each `Send`-model holds the following information:
+
+- FQN of mailable class
+- subject
+- from address
+- reply to address
+- to address
+- cc adresses
+- bcc adresses
+
+Additionally, the `sends`-table has the following columns which can be filled by your own application ([learn more](https://github.com/stefanzweifel/laravel-sends#further-usage-of-the-sends-table)).
+
+- `delivered_at`
+- `last_opened_at`
+- `opens`
+- `clicks`
+- `last_clicked_at`
+- `complained_at`
+- `bounced_at`
+- `permanent_bounced_at`
+- `rejected_at`
+
 ## Installation
 
 You can install the package via composer:
@@ -98,7 +120,7 @@ Read further to learn how to store the name and how to associate models with a M
 
 ### Store Mailable class name on Send Model
 
-By default the Event Listener stores the mails subject and the recipient addresses. That's nice, but we can do better.
+By default the Event Listener stores the mails subject and the recipient adresses. That's nice, but we can do better.
 It can be beneficial for your application to know which Mailable class triggered the sent email. 
 
 To store this information, add the `StoreMailables`-trait to your Mailable classes like below.

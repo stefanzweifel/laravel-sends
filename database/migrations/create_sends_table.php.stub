@@ -25,6 +25,7 @@ return new class extends Migration
             $table->bigInteger('clicks')->nullable();
             $table->timestamp('last_clicked_at')->nullable();
             $table->timestamp('complained_at')->nullable();
+            $table->timestamp('bounced_at')->nullable();
             $table->timestamp('permanent_bounced_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
             $table->timestamps();

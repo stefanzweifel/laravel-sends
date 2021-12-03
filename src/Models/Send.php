@@ -26,6 +26,7 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property-read int $clicks
  * @property-read ?Carbon $last_clicked_at
  * @property-read ?Carbon $complained_at
+ * @property-read ?Carbon $bounced_at
  * @property-read ?Carbon $permanent_bounced_at
  * @property-read ?Carbon $rejected_at
  */

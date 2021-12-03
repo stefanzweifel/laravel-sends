@@ -55,6 +55,8 @@ it('stores to cc and bcc addresses in database table', function () {
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
+        'from' => json_encode(['from@example.com' => 'From']),
+        'reply_to' => json_encode(['reply@example.com' => 'Reply']),
         'to' => json_encode(['test@example.com' => null]),
         'cc' => json_encode([
             'cc-1@example.com' => null,

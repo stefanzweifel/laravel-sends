@@ -19,6 +19,7 @@ class SendFactory extends Factory
             'from' => [
                 $this->faker->email => $this->faker->firstName(),
             ],
+            'reply_to' => null,
             'to' => [
                 $this->faker->email => $this->faker->firstName(),
             ],

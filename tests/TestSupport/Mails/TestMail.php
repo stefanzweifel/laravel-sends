@@ -16,6 +16,8 @@ class TestMail extends Mailable
     public function build()
     {
         return $this
+            ->replyTo('reply@example.com', 'Reply')
+            ->from('from@example.com', 'From')
             ->view('emails.test')
             ->subject("::subject::");
     }

@@ -15,6 +15,7 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property-read string $mail_class
  * @property-read string $subject
  * @property-read array $from
+ * @property-read array $reply_to
  * @property-read array $to
  * @property-read array $cc
  * @property-read array $bcc
@@ -37,6 +38,7 @@ class Send extends Model
         'mail_class',
         'subject',
         'from',
+        'reply_to',
         'to',
         'cc',
         'bcc',
@@ -55,6 +57,7 @@ class Send extends Model
     protected $casts = [
         'id' => 'integer',
         'from' => 'json',
+        'reply_to' => 'json',
         'to' => 'json',
         'cc' => 'json',
         'bcc' => 'json',

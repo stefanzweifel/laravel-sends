@@ -30,6 +30,7 @@ class StoreOutgoingMailListener
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
             'from' => $event->message->getFrom(),
+            'reply_to' => $event->message->getReplyTo(),
             'to' => $event->message->getTo(),
             'cc' => $event->message->getCc(),
             'bcc' => $event->message->getBcc(),

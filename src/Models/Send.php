@@ -19,16 +19,16 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property-read array $to
  * @property-read array $cc
  * @property-read array $bcc
- * @property-read ?Carbon $sent_at
- * @property-read ?Carbon $delivered_at
- * @property-read int $opens
- * @property-read ?Carbon $last_opened_at
- * @property-read int $clicks
- * @property-read ?Carbon $last_clicked_at
- * @property-read ?Carbon $complained_at
- * @property-read ?Carbon $bounced_at
- * @property-read ?Carbon $permanent_bounced_at
- * @property-read ?Carbon $rejected_at
+ * @property ?Carbon $sent_at
+ * @property ?Carbon $delivered_at
+ * @property int $opens
+ * @property ?Carbon $last_opened_at
+ * @property int $clicks
+ * @property ?Carbon $last_clicked_at
+ * @property ?Carbon $complained_at
+ * @property ?Carbon $bounced_at
+ * @property ?Carbon $permanent_bounced_at
+ * @property ?Carbon $rejected_at
  */
 class Send extends Model
 {

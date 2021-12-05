@@ -28,7 +28,7 @@ it('stores outgoing mails in database table', function () {
         'to' => json_encode(['test@example.com' => null]),
         'cc' => null,
         'bcc' => null,
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
 
     assertDatabaseCount('sendables', 0);
@@ -66,7 +66,7 @@ it('stores to cc and bcc addresses in database table', function () {
             'bcc-1@example.com' => null,
             'bcc-2@example.com' => 'BCC Name 2',
         ]),
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
 });
 
@@ -93,7 +93,7 @@ it('stores fqn of mail class in database table', function () {
         'to' => json_encode(['test@example.com' => null]),
         'cc' => null,
         'bcc' => null,
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
 });
 
@@ -109,7 +109,7 @@ it('attaches related models to a send model if respective header is present', fu
         'to' => json_encode(['test@example.com' => null]),
         'cc' => null,
         'bcc' => null,
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
         'send_id' => 1,
@@ -130,7 +130,7 @@ it('attaches related models to a send model based on the public properties of th
         'to' => json_encode(['test@example.com' => null]),
         'cc' => null,
         'bcc' => null,
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
         'send_id' => 1,
@@ -151,7 +151,7 @@ it('attaches related models only once if related models are defined both as publ
         'to' => json_encode(['test@example.com' => null]),
         'cc' => null,
         'bcc' => null,
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
     assertDatabaseCount('sendables', 1);
     assertDatabaseHas('sendables', [
@@ -190,6 +190,6 @@ it('stores outgoing notifications in database table', function () {
         'to' => json_encode(['foo@example.com' => null]),
         'cc' => null,
         'bcc' => null,
-        'sent_at' => now(),
+        ['sent_at', '!=', null],
     ]);
 });

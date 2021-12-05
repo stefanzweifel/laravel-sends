@@ -289,8 +289,7 @@ class AwsSnsSesWebhookController extends SesWebhook {
     protected function onDelivery(array $message)
     {
         $messageIdHeader = collect(Arr::get($message, 'mail.headers', []))
-            ->where('name', 'X-Laravel-Message-ID')
-            ->first();
+            ->firstWhere('name', config('sends.headers.custom_message_id'));
 
         if ($messageIdHeader === null) {
             return;

@@ -29,6 +29,8 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property ?Carbon $bounced_at
  * @property ?Carbon $permanent_bounced_at
  * @property ?Carbon $rejected_at
+ * @method static Builder forMessageId(string $messageId)
+ * @method static Builder forMailClass(string $mailClass)
  */
 class Send extends Model
 {

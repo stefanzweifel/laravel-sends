@@ -29,6 +29,8 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property ?Carbon $bounced_at
  * @property ?Carbon $permanent_bounced_at
  * @property ?Carbon $rejected_at
+ * @method static Builder forMessageId(string $messageId)
+ * @method static Builder forMailClass(string $mailClass)
  */
 class Send extends Model
 {
@@ -79,12 +81,12 @@ class Send extends Model
         return new SendFactory();
     }
 
-    public function scopeByMessageId(Builder $builder, string $messageId): void
+    public function scopeForMessageId(Builder $builder, string $messageId): void
     {
         $builder->where('message_id', $messageId);
     }
 
-    public function scopeByMailClass(Builder $builder, string $mailClass): void
+    public function scopeForMailClass(Builder $builder, string $mailClass): void
     {
         $builder->where('mail_class', $mailClass);
     }

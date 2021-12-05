@@ -70,8 +70,8 @@ it('stores to cc and bcc addresses in database table', function () {
     ]);
 });
 
-it('stores transport message id in database table', function () {
-    $this->addTransportMessageIdHeaderToMail();
+it('stores message id in database table', function () {
+    $this->addMessageIdHeaderToMail();
 
     Mail::to('test@example.com')
         ->send(new TestMail());

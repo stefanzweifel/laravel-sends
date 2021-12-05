@@ -79,12 +79,12 @@ class Send extends Model
         return new SendFactory();
     }
 
-    public function scopeByMessageId(Builder $builder, string $messageId): void
+    public function scopeForMessageId(Builder $builder, string $messageId): void
     {
         $builder->where('message_id', $messageId);
     }
 
-    public function scopeByMailClass(Builder $builder, string $mailClass): void
+    public function scopeForMailClass(Builder $builder, string $mailClass): void
     {
         $builder->where('mail_class', $mailClass);
     }

@@ -25,7 +25,7 @@ $product->sends()->get();
 Or you can fetch all sent out emails for the given Mailable class.
 
 ```php
-Send::byMailClass(ProductReviewMail::class)->get();
+Send::forMailClass(ProductReviewMail::class)->get();
 ```
 
 Each `Send`-model holds the following information:
@@ -38,7 +38,7 @@ Each `Send`-model holds the following information:
 - cc adresses
 - bcc adresses
 
-Additionally, the `sends`-table has the following columns which can be filled by your own application ([learn more](https://github.com/stefanzweifel/laravel-sends#further-usage-of-the-sends-table)).
+Additionally, the `sends`-table has the following columns which can be filled by your own application ([learn more](#further-usage-of-the-sends-table)).
 
 - `delivered_at`
 - `last_opened_at`
@@ -82,11 +82,6 @@ return [
 
     'headers' => [
         /**
-         * Header containing unique ID of the sent out mailable class.
-         */
-        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
-
-        /**
          * Header containing the encrypted FQN of the mailable class.
          */
         'mail_class' => env('SENDS_HEADERS_MAIL_CLASS', 'X-Laravel-Mail-Class'),
@@ -96,6 +91,11 @@ return [
          * Eloquent models are associated with the mailable class.
          */
         'models' => env('SENDS_HEADERS_MAIL_MODELS', 'X-Laravel-Mail-Models'),
+
+        /**
+         * Header containing unique ID of the sent out mailable class.
+         */
+        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
     ],
 ];
 ```
@@ -199,7 +199,7 @@ $product->sends()->get();
 
 #### Automatically associate Models with Mailables
 
-If you do not pass an argument to the `associateWith`-method, the package will automatically associate all public properties which implement the `HasSends`-interface with the Mailable class.
+If you do not pass an argument to the `associateWith`-method, the package will automatically associate all public properties which implement the `HasSends`-interface with the Mailable class. 🪄
 
 In the example below, the `ProductReviewMail`-Mailable will automatically be associated with the `$product` Model, as `Product` implements the `HasSends` interface. The `$user` model will be ignored, as it's declared as a private property.
 
@@ -209,9 +209,10 @@ class ProductReviewMail extends Mailable
     use SerializesModels;
     use StoreMailables;
 
-    public function __construct(private User $user, public Product $product)
-    {
-    }
+    public function __construct(
+        private User $user, 
+        public Product $product
+    ) { }
 
     public function build()
     {
@@ -228,7 +229,8 @@ class ProductReviewMail extends Mailable
 If you're sending emails through AWS SES or a similar service, you might want to identify the sent email in the future (for example when a webhook for the "Delivered"-event is sent to your application).
 
 The package comes with an event listener helping you here. Update the EventServiceProvider to listen to the `MessageSending` event and add the `AttachSendUuidListener` as a listener. 
-A `X-Laravel-Message-UUID` header will be attached to all outgoing emails. The header contains a UUID value. This value can not be compared to the `Message-ID` defined in [RFC 2392](https://datatracker.ietf.org/doc/html/rfc2392).
+A `X-Laravel-Message-UUID` header will be attached to all outgoing emails. The header contains a UUID value. (This value can not be compared to the `Message-ID` defined in [RFC 2392](https://datatracker.ietf.org/doc/html/rfc2392))   
+You can then use the value of `X-Laravel-Message-UUID` or `$send->uuid` later in your application.
 
 ```php
 // app/Providers/EventServiceProvider.php
@@ -240,7 +242,7 @@ protected $listen = [
 ]
 ```
 
-If you want to stored the value of `Message-ID` in your database, do not add the event listener but update your the `SENDS_HEADERS_SEND_UUID`-env variable to `Message-ID`. The `StoreOutgoingMailListener` will then store the `Message-ID` in the database.
+(If you want to store the value of `Message-ID` in your database, do not add the event listener but update the `SENDS_HEADERS_SEND_UUID`-env variable to `Message-ID`. The `StoreOutgoingMailListener` will then store the `Message-ID` in the database.)
 
 ### Prune Send Models
 

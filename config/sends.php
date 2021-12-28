@@ -8,11 +8,6 @@ return [
 
     'headers' => [
         /**
-         * Header containing unique ID of the sent out mailable class.
-         */
-        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
-
-        /**
          * Header containing the encrypted FQN of the mailable class.
          */
         'mail_class' => env('SENDS_HEADERS_MAIL_CLASS', 'X-Laravel-Mail-Class'),
@@ -22,5 +17,10 @@ return [
          * Eloquent models are associated with the mailable class.
          */
         'models' => env('SENDS_HEADERS_MAIL_MODELS', 'X-Laravel-Mail-Models'),
+
+        /**
+         * Header containing unique ID of the sent out mailable class.
+         */
+        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
     ],
 ];

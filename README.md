@@ -84,7 +84,7 @@ return [
         /**
          * Header containing unique ID of the sent out mailable class.
          */
-        'custom_message_id' => env('SENDS_HEADERS_CUSTOM_MESSAGE_ID', 'X-Laravel-Message-ID'),
+        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
 
         /**
          * Header containing the encrypted FQN of the mailable class.
@@ -227,18 +227,20 @@ class ProductReviewMail extends Mailable
 
 If you're sending emails through AWS SES or a similar service, you might want to identify the sent email in the future (for example when a webhook for the "Delivered"-event is sent to your application).
 
-The package comes with an event listener helping you here. Update the EventServiceProvider to listen to the `MessageSending` event and add the `AttachCustomMessageIdListener` as a listener. 
-A `X-Laravel-Message-ID` header will be attached to all outgoing emails. The header contains a UUID value. This value is can not be compared to the `Message-ID` defined in [RFC 2392](https://datatracker.ietf.org/doc/html/rfc2392).
+The package comes with an event listener helping you here. Update the EventServiceProvider to listen to the `MessageSending` event and add the `AttachSendUuidListener` as a listener. 
+A `X-Laravel-Message-UUID` header will be attached to all outgoing emails. The header contains a UUID value. This value can not be compared to the `Message-ID` defined in [RFC 2392](https://datatracker.ietf.org/doc/html/rfc2392).
 
 ```php
 // app/Providers/EventServiceProvider.php
 protected $listen = [
     // ...
     \Illuminate\Mail\Events\MessageSending::class => [
-        \Wnx\Sends\Listeners\AttachCustomMessageIdListener::class,
+        \Wnx\Sends\Listeners\AttachSendUuidListener::class,
     ],
 ]
 ```
+
+If you want to stored the value of `Message-ID` in your database, do not add the event listener but update your the `SENDS_HEADERS_SEND_UUID`-env variable to `Message-ID`. The `StoreOutgoingMailListener` will then store the `Message-ID` in the database.
 
 ### Prune Send Models
 
@@ -289,14 +291,14 @@ A controller that handles the "Delivered" event might look like this.
 class AwsSnsSesWebhookController extends SesWebhook {
     protected function onDelivery(array $message)
     {
-        $messageIdHeader = collect(Arr::get($message, 'mail.headers', []))
-            ->firstWhere('name', config('sends.headers.custom_message_id'));
+        $uuidHeader = collect(Arr::get($message, 'mail.headers', []))
+            ->firstWhere('name', config('sends.headers.send_uuid'));
 
-        if ($messageIdHeader === null) {
+        if ($uuidHeader === null) {
             return;
         }
 
-        $send = Send::where('message_id', $messageIdHeader['value'])->first();
+        $send = Send::forUuid($uuidHeader['value'])->first();
 
         if ($send === null) {
             return;

@@ -2,7 +2,7 @@
 
 return [
     /*
-     * The fully qualified class name of the send model.
+     * The fully qualified class name of the `Send` model.
      */
     'send_model' => \Wnx\Sends\Models\Send::class,
 

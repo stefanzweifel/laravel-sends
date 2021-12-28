@@ -12,7 +12,9 @@ use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeader;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithPublicProperties;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeader;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderAndPublicProperties;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderPassAsArguments;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderWrongModel;
+use Wnx\Sends\Tests\TestSupport\Models\AnotherTestModel;
 use Wnx\Sends\Tests\TestSupport\Models\TestModel;
 use Wnx\Sends\Tests\TestSupport\Models\TestModelWithoutHasSendsContract;
 use Wnx\Sends\Tests\TestSupport\Notifications\TestNotification;
@@ -115,6 +117,33 @@ it('attaches related models to a send model if respective header is present', fu
         'send_id' => 1,
         'sendable_type' => TestModel::class,
         'sendable_id' => 1,
+    ]);
+});
+
+it('attaches related models to a send model by passing arguments to associateWith method', function () {
+    $testModel = TestModel::create();
+    $anotherTestModel = AnotherTestModel::create();
+
+    Mail::to('test@example.com')
+        ->send(new TestMailWithRelatedModelsHeaderPassAsArguments($testModel, $anotherTestModel));
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModel::class,
+        'sendable_id' => 1,
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => AnotherTestModel::class,
+        'sendable_id' => 2,
     ]);
 });
 

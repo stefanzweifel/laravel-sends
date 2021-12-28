@@ -114,7 +114,7 @@ protected $listen = [
 ]
 ```
 
-The metadata of **all** outgoing emails created by mailables or notifications is now being stored in the `sends`-table. (Note that you currently can only associate models to mailables but not to notifiations)
+The metadata of **all** outgoing emails created by mailables or notifications is now being stored in the `sends`-table. (Note that you can only associate models to mailables; but not to notifiations)
 
 Read further to learn how to store the name and how to associate models with a Mailable class.
 
@@ -146,7 +146,7 @@ class ProductReviewMail extends Mailable
 }
 ```
 
-The method will add a `X-Laravel-Mail-Class`-header to the outgoing email containing the fully qualified name (FQN) of the Mailable class as an encrypted string. (eg. `App\Mails\ProductReviewMail`)
+The method will add a `X-Laravel-Mail-Class`-header to the outgoing email containing the fully qualified name (FQN) of the Mailable class as an encrypted string. (eg. `App\Mails\ProductReviewMail`). Update the `SENDS_HEADERS_MAIL_CLASS`-env variable to adjust the header name. (See config for details).
 
 The package's event listener will then look for the header, decrypt the value and store it in the database.
 
@@ -167,7 +167,7 @@ class Product extends Model implements HasSends
 }
 ```
 
-You can now call the `associateWith()`-method within the `build()`-method and pass it an array of Models you want to associate with the Mailable class.
+You can now call the `associateWith()`-method within the `build()`-method. Pass the Models you want to associate with the Mailable class to the method as arguments. Instead of passing the Models as arguments, you can also pass them as an array.
 
 ```php
 class ProductReviewMail extends Mailable
@@ -183,7 +183,8 @@ class ProductReviewMail extends Mailable
     {
         return $this
             ->storeClassName()
-            ->associateWith([$this->product])
+            ->associateWith($this->product)
+            // ->associateWith([$this->product])
             ->view('emails.products.review')
             ->subject("$this->user->name, $this->product->name waits for your review");
     }
@@ -227,7 +228,7 @@ class ProductReviewMail extends Mailable
 If you're sending emails through AWS SES or a similar service, you might want to identify the sent email in the future (for example when a webhook for the "Delivered"-event is sent to your application).
 
 The package comes with an event listener helping you here. Update the EventServiceProvider to listen to the `MessageSending` event and add the `AttachCustomMessageIdListener` as a listener. 
-A `X-Laravel-Message-ID` will be attached to all outgoing emails.
+A `X-Laravel-Message-ID` header will be attached to all outgoing emails. The header contains a UUID value. This value is can not be compared to the `Message-ID` defined in [RFC 2392](https://datatracker.ietf.org/doc/html/rfc2392).
 
 ```php
 // app/Providers/EventServiceProvider.php

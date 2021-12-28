@@ -22,12 +22,14 @@ trait StoreMailables
     }
 
     /**
-     * @param array<HasSends> $models
+     * @param array<HasSends>|HasSends $models
      * @return StoreMailables
      * @throws \ReflectionException
      */
-    protected function associateWith(array $models = []): static
+    protected function associateWith(array|HasSends $models = []): static
     {
+        $models = $models instanceof HasSends ? func_get_args() : $models;
+
         $models = collect($models)
             ->when(count($models) === 0, function (Collection $collection) {
                 $publicPropertyWithHasSends = collect((new ReflectionClass($this))

@@ -10,7 +10,7 @@ return [
         /**
          * Header containing unique ID of the sent out mailable class.
          */
-        'custom_message_id' => env('SENDS_HEADERS_CUSTOM_MESSAGE_ID', 'X-Laravel-Message-ID'),
+        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
 
         /**
          * Header containing the encrypted FQN of the mailable class.

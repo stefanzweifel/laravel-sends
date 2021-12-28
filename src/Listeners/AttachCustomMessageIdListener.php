@@ -11,10 +11,10 @@ class AttachCustomMessageIdListener
 {
     public function handle(MessageSending $event): void
     {
-        if ($event->message->getHeaders()->has(config('sends.headers.custom_message_id'))) {
+        if ($event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
             return;
         }
 
-        $event->message->getHeaders()->addTextHeader(config('sends.headers.custom_message_id'), Str::uuid()->toString());
+        $event->message->getHeaders()->addTextHeader(config('sends.headers.send_uuid'), Str::uuid()->toString());
     }
 }

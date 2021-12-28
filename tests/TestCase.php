@@ -57,7 +57,7 @@ class TestCase extends Orchestra
         });
     }
 
-    public function addMessageIdHeaderToMail(): void
+    public function addSendUuidHeaderToMail(): void
     {
         Event::listen(MessageSending::class, [AttachCustomMessageIdListener::class, 'handle']);
     }

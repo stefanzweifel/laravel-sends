@@ -26,7 +26,7 @@ class StoreOutgoingMailListener
     protected function createSendModel(MessageSent $event): Send
     {
         return config('sends.send_model')::create([
-            'message_id' => $this->getMessageId($event),
+            'uuid' => $this->getSendUuid($event),
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
             'from' => $event->message->getFrom(),
@@ -38,13 +38,13 @@ class StoreOutgoingMailListener
         ]);
     }
 
-    private function getMessageId(MessageSent $event): ?string
+    private function getSendUuid(MessageSent $event): ?string
     {
-        if (! $event->message->getHeaders()->has(config('sends.headers.custom_message_id'))) {
+        if (! $event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
             return null;
         }
 
-        $headerValue = $event->message->getHeaders()->get(config('sends.headers.custom_message_id'));
+        $headerValue = $event->message->getHeaders()->get(config('sends.headers.send_uuid'));
 
         if (is_null($headerValue)) {
             return null;

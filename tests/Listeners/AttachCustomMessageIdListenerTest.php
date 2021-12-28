@@ -7,11 +7,12 @@ use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 use Wnx\Sends\Listeners\AttachCustomMessageIdListener;
 
-it('attaches message id header', function () {
+it('attaches send uuid header', function () {
     $event = new MessageSending(new Swift_Message());
 
     (new AttachCustomMessageIdListener())->handle($event);
 
-    assertTrue($event->message->getHeaders()->has(config('sends.headers.custom_message_id')));
-    assertNotNull($event->message->getHeaders()->get(config('sends.headers.custom_message_id')));
+    assertTrue($event->message->getHeaders()->has('X-Laravel-Send-UUID'));
+    assertTrue($event->message->getHeaders()->has(config('sends.headers.send_uuid')));
+    assertNotNull($event->message->getHeaders()->get(config('sends.headers.send_uuid')));
 });

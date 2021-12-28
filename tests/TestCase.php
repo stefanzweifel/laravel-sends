@@ -10,7 +10,7 @@ use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Event;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Wnx\Sends\Listeners\AttachCustomMessageIdListener;
+use Wnx\Sends\Listeners\AttachSendUuidListener;
 use Wnx\Sends\Listeners\StoreOutgoingMailListener;
 use Wnx\Sends\SendsServiceProvider;
 
@@ -59,6 +59,6 @@ class TestCase extends Orchestra
 
     public function addSendUuidHeaderToMail(): void
     {
-        Event::listen(MessageSending::class, [AttachCustomMessageIdListener::class, 'handle']);
+        Event::listen(MessageSending::class, [AttachSendUuidListener::class, 'handle']);
     }
 }

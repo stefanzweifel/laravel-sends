@@ -7,7 +7,7 @@ namespace Wnx\Sends\Listeners;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Str;
 
-class AttachCustomMessageIdListener
+class AttachSendUuidListener
 {
     public function handle(MessageSending $event): void
     {

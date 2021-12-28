@@ -24,7 +24,7 @@ it('stores outgoing mails in database table', function () {
         ->send(new TestMail());
 
     assertDatabaseHas('sends', [
-        'message_id' => null,
+        'uuid' => null,
         'mail_class' => null,
         'subject' => '::subject::',
         'to' => json_encode(['test@example.com' => null]),
@@ -72,14 +72,14 @@ it('stores to cc and bcc addresses in database table', function () {
     ]);
 });
 
-it('stores message id in database table', function () {
-    $this->addMessageIdHeaderToMail();
+it('stores send uuid in database table', function () {
+    $this->addSendUuidHeaderToMail();
 
     Mail::to('test@example.com')
         ->send(new TestMail());
 
     assertDatabaseHas('sends', [
-        ['message_id', '!=', null],
+        ['uuid', '!=', null],
         'mail_class' => null,
         'subject' => '::subject::',
     ]);
@@ -213,7 +213,7 @@ it('stores outgoing notifications in database table', function () {
         ->notify(new TestNotification($testModel));
 
     assertDatabaseHas('sends', [
-        'message_id' => null,
+        'uuid' => null,
         'mail_class' => null,
         'subject' => '::subject-of-notification::',
         'to' => json_encode(['foo@example.com' => null]),

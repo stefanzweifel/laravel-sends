@@ -6,13 +6,12 @@ use function PHPUnit\Framework\assertTrue;
 use Wnx\Sends\Models\Send;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeader;
 
-it('finds send model by given message id', function () {
-
+it('finds send model by given uuid', function () {
     /** @var Send $send */
     $send = Send::factory()->create();
 
     /** @var Send $result */
-    $result = Send::forMessageId($send->message_id)->first();
+    $result = Send::forUuid($send->uuid)->first();
 
     assertTrue($result->is($send));
 });

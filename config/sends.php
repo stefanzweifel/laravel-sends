@@ -2,16 +2,11 @@
 
 return [
     /*
-     * The fully qualified class name of the send model.
+     * The fully qualified class name of the `Send` model.
      */
     'send_model' => \Wnx\Sends\Models\Send::class,
 
     'headers' => [
-        /**
-         * Header containing unique ID of the sent out mailable class.
-         */
-        'custom_message_id' => env('SENDS_HEADERS_CUSTOM_MESSAGE_ID', 'X-Laravel-Message-ID'),
-
         /**
          * Header containing the encrypted FQN of the mailable class.
          */
@@ -22,5 +17,10 @@ return [
          * Eloquent models are associated with the mailable class.
          */
         'models' => env('SENDS_HEADERS_MAIL_MODELS', 'X-Laravel-Mail-Models'),
+
+        /**
+         * Header containing unique ID of the sent out mailable class.
+         */
+        'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
     ],
 ];

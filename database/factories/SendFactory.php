@@ -13,7 +13,7 @@ class SendFactory extends Factory
     public function definition()
     {
         return [
-            'message_id' => $this->faker->uuid,
+            'uuid' => $this->faker->uuid,
             'mail_class' => TestMailWithMailClassHeader::class,
             'subject' => $this->faker->sentence(6),
             'from' => [

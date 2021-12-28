@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Wnx\Sends\Database\Factories\SendFactory;
 
 /**
- * @property-read string $message_id
+ * @property-read string $uuid
  * @property-read string $mail_class
  * @property-read string $subject
  * @property-read array $from
@@ -29,7 +29,7 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property ?Carbon $bounced_at
  * @property ?Carbon $permanent_bounced_at
  * @property ?Carbon $rejected_at
- * @method static Builder forMessageId(string $messageId)
+ * @method static Builder forUuid(string $uuid)
  * @method static Builder forMailClass(string $mailClass)
  */
 class Send extends Model
@@ -37,7 +37,7 @@ class Send extends Model
     use HasFactory;
 
     protected $fillable = [
-        'message_id',
+        'uuid',
         'mail_class',
         'subject',
         'from',
@@ -81,9 +81,9 @@ class Send extends Model
         return new SendFactory();
     }
 
-    public function scopeForMessageId(Builder $builder, string $messageId): void
+    public function scopeForUuid(Builder $builder, string $uuid): void
     {
-        $builder->where('message_id', $messageId);
+        $builder->where('uuid', $uuid);
     }
 
     public function scopeForMailClass(Builder $builder, string $mailClass): void

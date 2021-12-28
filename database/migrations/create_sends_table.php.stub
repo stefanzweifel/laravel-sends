@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('sends', function (Blueprint $table) {
             $table->id();
-            $table->string('message_id')->nullable();
+            $table->string('uuid')->nullable()->index();
             $table->string('mail_class')->nullable()->index();
             $table->string('subject')->nullable();
             $table->json('from')->nullable();

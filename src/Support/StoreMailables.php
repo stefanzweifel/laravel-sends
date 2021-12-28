@@ -22,7 +22,7 @@ trait StoreMailables
     }
 
     /**
-     * @param array<HasSends> $models
+     * @param array<HasSends>|HasSends $models
      * @return StoreMailables
      * @throws \ReflectionException
      */

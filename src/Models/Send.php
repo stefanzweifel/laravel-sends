@@ -14,6 +14,7 @@ use Wnx\Sends\Database\Factories\SendFactory;
  * @property-read string $uuid
  * @property-read string $mail_class
  * @property-read string $subject
+ * @property-read ?string $content
  * @property-read array $from
  * @property-read array $reply_to
  * @property-read array $to
@@ -40,6 +41,7 @@ class Send extends Model
         'uuid',
         'mail_class',
         'subject',
+        'content',
         'from',
         'reply_to',
         'to',

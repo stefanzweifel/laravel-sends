@@ -222,3 +222,29 @@ it('stores outgoing notifications in database table', function () {
         ['sent_at', '!=', null],
     ]);
 });
+
+it('does not store content of outgoing mail in database table if config is set to false', function () {
+    config(['sends.store_content' => false]);
+
+    Mail::to('test@example.com')
+        ->send(new TestMail());
+
+    assertDatabaseHas('sends', [
+        'content' => null,
+    ]);
+
+    assertDatabaseCount('sendables', 0);
+});
+
+it('stores content of outgoing mail in database table if config is set to true', function () {
+    config(['sends.store_content' => true]);
+
+    Mail::to('test@example.com')
+        ->send(new TestMail());
+
+    assertDatabaseHas('sends', [
+        'content' => "<h1>Test</h1>\n\n<p>This is a test mail.</p>\n",
+    ]);
+
+    assertDatabaseCount('sendables', 0);
+});

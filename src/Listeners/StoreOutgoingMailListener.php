@@ -29,6 +29,7 @@ class StoreOutgoingMailListener
             'uuid' => $this->getSendUuid($event),
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
+            'content' => $this->getContent($event),
             'from' => $event->message->getFrom(),
             'reply_to' => $event->message->getReplyTo(),
             'to' => $event->message->getTo(),
@@ -102,5 +103,14 @@ class StoreOutgoingMailListener
                 return $model::find($id);
             })
             ->filter(fn (Model $model) => (new ReflectionClass($model))->implementsInterface(HasSends::class));
+    }
+
+    private function getContent(MessageSent $event): ?string
+    {
+        if (config('sends.store_content', false) === false) {
+            return null;
+        }
+
+        return $event->message->getBody();
     }
 }

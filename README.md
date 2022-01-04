@@ -80,6 +80,11 @@ return [
      */
     'send_model' => \Wnx\Sends\Models\Send::class,
 
+    /**
+     * If set to true, the contet of sent mails is saved to the database.
+     */
+    'store_content' => env('SENDS_STORE_CONTENT', false),
+
     'headers' => [
         /**
          * Header containing the encrypted FQN of the mailable class.
@@ -243,6 +248,21 @@ protected $listen = [
 ```
 
 (If you want to store the value of `Message-ID` in your database, do not add the event listener but update the `SENDS_HEADERS_SEND_UUID`-env variable to `Message-ID`. The `StoreOutgoingMailListener` will then store the `Message-ID` in the database.)
+
+### Store Content of Mails
+By default, the package does not store the content of sent out emails.
+By default, the package does not store the content of sent out emails. By setting the `sends.store_content` configuration value to `true`, the body of all outgoing mails is stored in the `content`-column in the `sends` database table. 
+
+```php
+/**
+ * If set to true, the contet of sent mails is saved to the database.
+ */
+'store_content' => true,
+```
+
+```shell
+SENDS_STORE_CONTENT=true
+``` 
 
 ### Prune Send Models
 

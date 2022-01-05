@@ -39,7 +39,7 @@ class StoreOutgoingMailListener
         ]);
     }
 
-    private function getSendUuid(MessageSent $event): ?string
+    protected function getSendUuid(MessageSent $event): ?string
     {
         if (! $event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
             return null;
@@ -54,7 +54,7 @@ class StoreOutgoingMailListener
         return $headerValue->getFieldBody();
     }
 
-    private function getMailClassHeaderValue(MessageSent $event): ?string
+    protected function getMailClassHeaderValue(MessageSent $event): ?string
     {
         if (! $event->message->getHeaders()->has(config('sends.headers.mail_class'))) {
             return null;
@@ -72,7 +72,7 @@ class StoreOutgoingMailListener
     /**
      * @throws \JsonException
      */
-    private function attachModelsToSendModel(MessageSent $event, Send $send): void
+    protected function attachModelsToSendModel(MessageSent $event, Send $send): void
     {
         $this->getModels($event)
             ->each(fn (HasSends $model) => $model->sends()->attach($send));
@@ -81,7 +81,7 @@ class StoreOutgoingMailListener
     /**
      * @throws \JsonException
      */
-    private function getModels(MessageSent $event): Collection
+    protected function getModels(MessageSent $event): Collection
     {
         if (! $event->message->getHeaders()->has(config('sends.headers.models'))) {
             return collect([]);
@@ -105,7 +105,7 @@ class StoreOutgoingMailListener
             ->filter(fn (Model $model) => (new ReflectionClass($model))->implementsInterface(HasSends::class));
     }
 
-    private function getContent(MessageSent $event): ?string
+    protected function getContent(MessageSent $event): ?string
     {
         if (config('sends.store_content', false) === false) {
             return null;

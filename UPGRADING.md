@@ -1,5 +1,36 @@
 # Upgrading
 
+## From v1.0 to v2.0
+
+There are no breaking changes besides a new `content`-column in  the `sends`-table. 
+The package is still young and not too many people are using v1. That is why I've decided to not include an additional migration in the package, but force you as a user to add that column yourself.
+To learn more about the new feature check out [#6](https://github.com/stefanzweifel/laravel-sends/pull/6).
+
+The upgrade should only take a couple of seconds. Execute the following artisan command to create the migration file. Paste my example below into the file and you're good to go.
+
+```bash
+php artisan make:migration AddContentColumnToSendsTable --table=sends
+```
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddContentColumnToSendsTable extends Migration
+{
+    public function up()
+    {
+        Schema::table('sends', function (Blueprint $table) {
+            $table->text('content')->nullable()->after('subject');
+        });
+    }
+}
+```
+
+
 ## From v0.1 to v1.0
 
 The major change coming to the first stable release is the departure from the term "message_id" in favour of "uuid". (See [#5](https://github.com/stefanzweifel/laravel-sends/pull/5) for details)
@@ -14,7 +45,7 @@ The major change coming to the first stable release is the departure from the te
 Run the following command to create a new migration.
 
 ```bash
-php artisan make:migration RenameMessageIdToUuid --table=sends
+php artisan make:migration RenameMessageIdToUuidInSendsTable --table=sends
 ```
 
 ```php

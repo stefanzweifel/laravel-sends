@@ -29,6 +29,7 @@ class StoreOutgoingMailListener
             'uuid' => $this->getSendUuid($event),
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
+            'content' => $this->getContent($event),
             'from' => $event->message->getFrom(),
             'reply_to' => $event->message->getReplyTo(),
             'to' => $event->message->getTo(),
@@ -38,7 +39,7 @@ class StoreOutgoingMailListener
         ]);
     }
 
-    private function getSendUuid(MessageSent $event): ?string
+    protected function getSendUuid(MessageSent $event): ?string
     {
         if (! $event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
             return null;
@@ -53,7 +54,7 @@ class StoreOutgoingMailListener
         return $headerValue->getFieldBody();
     }
 
-    private function getMailClassHeaderValue(MessageSent $event): ?string
+    protected function getMailClassHeaderValue(MessageSent $event): ?string
     {
         if (! $event->message->getHeaders()->has(config('sends.headers.mail_class'))) {
             return null;
@@ -71,7 +72,7 @@ class StoreOutgoingMailListener
     /**
      * @throws \JsonException
      */
-    private function attachModelsToSendModel(MessageSent $event, Send $send): void
+    protected function attachModelsToSendModel(MessageSent $event, Send $send): void
     {
         $this->getModels($event)
             ->each(fn (HasSends $model) => $model->sends()->attach($send));
@@ -80,7 +81,7 @@ class StoreOutgoingMailListener
     /**
      * @throws \JsonException
      */
-    private function getModels(MessageSent $event): Collection
+    protected function getModels(MessageSent $event): Collection
     {
         if (! $event->message->getHeaders()->has(config('sends.headers.models'))) {
             return collect([]);
@@ -102,5 +103,14 @@ class StoreOutgoingMailListener
                 return $model::find($id);
             })
             ->filter(fn (Model $model) => (new ReflectionClass($model))->implementsInterface(HasSends::class));
+    }
+
+    protected function getContent(MessageSent $event): ?string
+    {
+        if (config('sends.store_content', false) === false) {
+            return null;
+        }
+
+        return $event->message->getBody();
     }
 }

@@ -6,6 +6,11 @@ return [
      */
     'send_model' => \Wnx\Sends\Models\Send::class,
 
+    /**
+     * If set to true, the content of sent mails is saved to the database.
+     */
+    'store_content' => env('SENDS_STORE_CONTENT', false),
+
     'headers' => [
         /**
          * Header containing the encrypted FQN of the mailable class.

@@ -250,7 +250,6 @@ protected $listen = [
 (If you want to store the value of `Message-ID` in your database, do not add the event listener but update the `SENDS_HEADERS_SEND_UUID`-env variable to `Message-ID`. The `StoreOutgoingMailListener` will then store the `Message-ID` in the database.)
 
 ### Store Content of Mails
-By default, the package does not store the content of sent out emails.
 By default, the package does not store the content of sent out emails. By setting the `sends.store_content` configuration value to `true`, the body of all outgoing mails is stored in the `content`-column in the `sends` database table. 
 
 ```php

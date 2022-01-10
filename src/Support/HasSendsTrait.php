@@ -12,7 +12,6 @@ trait HasSendsTrait
     public function sends(): MorphToMany
     {
         return $this
-            ->morphToMany( config('sends.send_model'), 'sendable','sendables','sendable_id','send_id')
-            ->orderByDesc('id');
+            ->morphToMany( config('sends.send_model'), 'sendable','sendables','sendable_id','send_id');
     }
 }

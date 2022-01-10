@@ -42,7 +42,7 @@ trait StoreMailables
             ->unique()
             ->map(fn (HasSends $model) => [
                 'model' => get_class($model),
-                'id' => $model->id,
+                'id' => $model->getKey(),
             ])
             ->toJson();
 

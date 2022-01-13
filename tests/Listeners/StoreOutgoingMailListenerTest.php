@@ -19,11 +19,14 @@ use Wnx\Sends\Tests\TestSupport\Models\TestModel;
 use Wnx\Sends\Tests\TestSupport\Models\TestModelWithoutHasSendsContract;
 use Wnx\Sends\Tests\TestSupport\Notifications\TestNotification;
 
-it('stores_outgoing_mails_in_database_table', function () {
+it('stores outgoing mails in database table', function () {
     Mail::to([
         [
-            'email' => 'test@example.com',
-            'name' => 'To Name',
+            'email' => 'to-1@example.com',
+            'name' => 'To 1 Name',
+        ], [
+            'email' => 'to-2@example.com',
+            'name' => 'To 2 Name',
         ],
     ])
         ->send(new TestMail());
@@ -32,9 +35,12 @@ it('stores_outgoing_mails_in_database_table', function () {
         'uuid' => null,
         'mail_class' => null,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => 'To Name']),
-        'cc' => null,
-        'bcc' => null,
+        'to' => json_encode([
+            'to-1@example.com' => 'To 1 Name',
+            'to-2@example.com' => 'To 2 Name',
+        ]),
+        'cc' => json_encode([]),
+        'bcc' =>  json_encode([]),
         ['sent_at', '!=', null],
     ]);
 
@@ -64,13 +70,13 @@ it('stores to cc and bcc addresses in database table', function () {
         'subject' => '::subject::',
         'from' => json_encode(['from@example.com' => 'From']),
         'reply_to' => json_encode(['reply@example.com' => 'Reply']),
-        'to' => json_encode(['test@example.com' => null]),
+        'to' => json_encode(['test@example.com' => '']),
         'cc' => json_encode([
-            'cc-1@example.com' => null,
+            'cc-1@example.com' => '',
             'cc-2@example.com' => 'CC Name 2',
         ]),
         'bcc' => json_encode([
-            'bcc-1@example.com' => null,
+            'bcc-1@example.com' => '',
             'bcc-2@example.com' => 'BCC Name 2',
         ]),
         ['sent_at', '!=', null],
@@ -97,9 +103,6 @@ it('stores fqn of mail class in database table', function () {
     assertDatabaseHas('sends', [
         'mail_class' => TestMailWithMailClassHeader::class,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => null]),
-        'cc' => null,
-        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
 });
@@ -113,9 +116,6 @@ it('attaches related models to a send model if respective header is present', fu
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => null]),
-        'cc' => null,
-        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
@@ -135,9 +135,6 @@ it('attaches related models to a send model by passing arguments to associateWit
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => null]),
-        'cc' => null,
-        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
@@ -161,9 +158,6 @@ it('attaches related models to a send model based on the public properties of th
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => null]),
-        'cc' => null,
-        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
@@ -182,9 +176,6 @@ it('attaches related models only once if related models are defined both as publ
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => null]),
-        'cc' => null,
-        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseCount('sendables', 1);
@@ -221,9 +212,7 @@ it('stores outgoing notifications in database table', function () {
         'uuid' => null,
         'mail_class' => null,
         'subject' => '::subject-of-notification::',
-        'to' => json_encode(['foo@example.com' => null]),
-        'cc' => null,
-        'bcc' => null,
+        'to' => json_encode(['foo@example.com' => '']),
         ['sent_at', '!=', null],
     ]);
 });

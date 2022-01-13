@@ -122,8 +122,6 @@ class StoreOutgoingMailListener
     private function getArrayFromAddress(array $address): Collection
     {
         return collect($address)
-            ->map(function (Address $address) {
-                return [$address->getAddress() => $address->getName()];
-            });
+            ->flatMap(fn(Address $address) => [$address->getAddress() => $address->getName()]);
     }
 }

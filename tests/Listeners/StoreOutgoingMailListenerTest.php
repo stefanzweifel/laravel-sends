@@ -24,10 +24,8 @@ it('stores outgoing mails in database table', function () {
         [
             'email' => 'to-1@example.com',
             'name' => 'To 1 Name',
-        ], [
-            'email' => 'to-2@example.com',
-            'name' => 'To 2 Name',
         ],
+        'to-2@example.com',
     ])
         ->send(new TestMail());
 
@@ -37,7 +35,7 @@ it('stores outgoing mails in database table', function () {
         'subject' => '::subject::',
         'to' => json_encode([
             'to-1@example.com' => 'To 1 Name',
-            'to-2@example.com' => 'To 2 Name',
+            'to-2@example.com' => null,
         ]),
         'cc' => null,
         'bcc' => null,
@@ -70,13 +68,13 @@ it('stores to cc and bcc addresses in database table', function () {
         'subject' => '::subject::',
         'from' => json_encode(['from@example.com' => 'From']),
         'reply_to' => json_encode(['reply@example.com' => 'Reply']),
-        'to' => json_encode(['test@example.com' => '']),
+        'to' => json_encode(['test@example.com' => null]),
         'cc' => json_encode([
-            'cc-1@example.com' => '',
+            'cc-1@example.com' => null,
             'cc-2@example.com' => 'CC Name 2',
         ]),
         'bcc' => json_encode([
-            'bcc-1@example.com' => '',
+            'bcc-1@example.com' => null,
             'bcc-2@example.com' => 'BCC Name 2',
         ]),
         ['sent_at', '!=', null],
@@ -212,7 +210,7 @@ it('stores outgoing notifications in database table', function () {
         'uuid' => null,
         'mail_class' => null,
         'subject' => '::subject-of-notification::',
-        'to' => json_encode(['foo@example.com' => '']),
+        'to' => json_encode(['foo@example.com' => null]),
         ['sent_at', '!=', null],
     ]);
 });

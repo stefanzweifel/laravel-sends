@@ -15,7 +15,7 @@ trait StoreMailables
 {
     protected function storeClassName(): self
     {
-        $this->withSwiftMessage(function (Swift_Message|Email $message) {
+        $this->withSymfonyMessage(function (Email $message) {
             $message->getHeaders()->addTextHeader(config('sends.headers.mail_class'), encrypt(self::class));
         });
 
@@ -47,7 +47,7 @@ trait StoreMailables
             ])
             ->toJson();
 
-        $this->withSwiftMessage(function (Swift_Message|Email $message) use ($models) {
+        $this->withSymfonyMessage(function (Email $message) use ($models) {
             $message->getHeaders()->addTextHeader(config('sends.headers.models'), encrypt($models));
         });
 

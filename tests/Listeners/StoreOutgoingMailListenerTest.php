@@ -39,8 +39,8 @@ it('stores outgoing mails in database table', function () {
             'to-1@example.com' => 'To 1 Name',
             'to-2@example.com' => 'To 2 Name',
         ]),
-        'cc' => json_encode([]),
-        'bcc' =>  json_encode([]),
+        'cc' => null,
+        'bcc' =>  null,
         ['sent_at', '!=', null],
     ]);
 

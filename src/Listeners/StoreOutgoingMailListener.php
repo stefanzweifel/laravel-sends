@@ -31,11 +31,11 @@ class StoreOutgoingMailListener
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
             'content' => $this->getContent($event),
-            'from' => $this->getArrayFromAddress($event->message->getFrom()),
-            'reply_to' => $this->getArrayFromAddress($event->message->getReplyTo()),
-            'to' => $this->getArrayFromAddress($event->message->getTo()),
-            'cc' => $this->getArrayFromAddress($event->message->getCc()),
-            'bcc' =>$this->getArrayFromAddress($event->message->getBcc()),
+            'from' => $this->getAddressesValue($event->message->getFrom()),
+            'reply_to' => $this->getAddressesValue($event->message->getReplyTo()),
+            'to' => $this->getAddressesValue($event->message->getTo()),
+            'cc' => $this->getAddressesValue($event->message->getCc()),
+            'bcc' =>$this->getAddressesValue($event->message->getBcc()),
             'sent_at' => now(),
         ]);
     }
@@ -117,11 +117,13 @@ class StoreOutgoingMailListener
 
     /**
      * @param array<Address> $address
-     * @return Collection
+     * @return Collection|null
      */
-    private function getArrayFromAddress(array $address): Collection
+    private function getAddressesValue(array $address): ?Collection
     {
-        return collect($address)
+        $addresses = collect($address)
             ->flatMap(fn(Address $address) => [$address->getAddress() => $address->getName()]);
+
+        return $addresses->count() > 0 ? $addresses : null;
     }
 }

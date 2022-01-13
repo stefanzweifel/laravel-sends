@@ -35,7 +35,7 @@ class StoreOutgoingMailListener
             'reply_to' => $this->getAddressesValue($event->message->getReplyTo()),
             'to' => $this->getAddressesValue($event->message->getTo()),
             'cc' => $this->getAddressesValue($event->message->getCc()),
-            'bcc' =>$this->getAddressesValue($event->message->getBcc()),
+            'bcc' => $this->getAddressesValue($event->message->getBcc()),
             'sent_at' => now(),
         ]);
     }
@@ -122,7 +122,7 @@ class StoreOutgoingMailListener
     private function getAddressesValue(array $address): ?Collection
     {
         $addresses = collect($address)
-            ->flatMap(fn(Address $address) => [$address->getAddress() => $address->getName()]);
+            ->flatMap(fn (Address $address) => [$address->getAddress() => $address->getName()]);
 
         return $addresses->count() > 0 ? $addresses : null;
     }

@@ -40,7 +40,7 @@ it('stores outgoing mails in database table', function () {
             'to-2@example.com' => 'To 2 Name',
         ]),
         'cc' => null,
-        'bcc' =>  null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
 

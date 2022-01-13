@@ -7,7 +7,6 @@ namespace Wnx\Sends\Support;
 use Illuminate\Support\Collection;
 use ReflectionClass;
 use ReflectionProperty;
-use Swift_Message;
 use Symfony\Component\Mime\Email;
 use Wnx\Sends\Contracts\HasSends;
 

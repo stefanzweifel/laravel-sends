@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Collection;
 use ReflectionClass;
+use Symfony\Component\Mime\Address;
 use Wnx\Sends\Contracts\HasSends;
 use Wnx\Sends\Models\Send;
 
@@ -30,11 +31,11 @@ class StoreOutgoingMailListener
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
             'content' => $this->getContent($event),
-            'from' => $event->message->getFrom(),
-            'reply_to' => $event->message->getReplyTo(),
-            'to' => $event->message->getTo(),
-            'cc' => $event->message->getCc(),
-            'bcc' => $event->message->getBcc(),
+            'from' => $this->getArrayFromAddress($event->message->getFrom()),
+            'reply_to' => $this->getArrayFromAddress($event->message->getReplyTo()),
+            'to' => $this->getArrayFromAddress($event->message->getTo()),
+            'cc' => $this->getArrayFromAddress($event->message->getCc()),
+            'bcc' =>$this->getArrayFromAddress($event->message->getBcc()),
             'sent_at' => now(),
         ]);
     }
@@ -51,7 +52,7 @@ class StoreOutgoingMailListener
             return null;
         }
 
-        return $headerValue->getFieldBody();
+        return $headerValue->getBodyAsString();
     }
 
     protected function getMailClassHeaderValue(MessageSent $event): ?string
@@ -66,7 +67,7 @@ class StoreOutgoingMailListener
             return null;
         }
 
-        return decrypt($headerValue->getFieldBody());
+        return decrypt($headerValue->getBodyAsString());
     }
 
     /**
@@ -93,7 +94,7 @@ class StoreOutgoingMailListener
             return collect([]);
         }
 
-        $models = decrypt($headerValue->getFieldBody());
+        $models = decrypt($headerValue->getBodyAsString());
 
         return collect(json_decode($models, true, 512, JSON_THROW_ON_ERROR))
             ->map(function (array $tuple): Model {
@@ -111,6 +112,18 @@ class StoreOutgoingMailListener
             return null;
         }
 
-        return $event->message->getBody();
+        return $event->message->getHtmlBody();
+    }
+
+    /**
+     * @param array<Address> $address
+     * @return Collection
+     */
+    private function getArrayFromAddress(array $address): Collection
+    {
+        return collect($address)
+            ->map(function (Address $address) {
+                return [$address->getAddress() => $address->getName()];
+            });
     }
 }

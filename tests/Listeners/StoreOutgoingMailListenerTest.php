@@ -19,15 +19,20 @@ use Wnx\Sends\Tests\TestSupport\Models\TestModel;
 use Wnx\Sends\Tests\TestSupport\Models\TestModelWithoutHasSendsContract;
 use Wnx\Sends\Tests\TestSupport\Notifications\TestNotification;
 
-it('stores outgoing mails in database table', function () {
-    Mail::to('test@example.com')
+it('stores_outgoing_mails_in_database_table', function () {
+    Mail::to([
+        [
+            'email' => 'test@example.com',
+            'name' => 'To Name',
+        ],
+    ])
         ->send(new TestMail());
 
     assertDatabaseHas('sends', [
         'uuid' => null,
         'mail_class' => null,
         'subject' => '::subject::',
-        'to' => json_encode(['test@example.com' => null]),
+        'to' => json_encode(['test@example.com' => 'To Name']),
         'cc' => null,
         'bcc' => null,
         ['sent_at', '!=', null],

@@ -24,8 +24,8 @@ it('stores outgoing mails in database table', function () {
         [
             'email' => 'to-1@example.com',
             'name' => 'To 1 Name',
+        ],
         'to-2@example.com',
-
     ])
         ->send(new TestMail());
 

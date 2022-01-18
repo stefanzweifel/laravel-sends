@@ -117,6 +117,9 @@ it('attaches related models to a send model if respective header is present', fu
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [

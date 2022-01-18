@@ -5,10 +5,11 @@ declare(strict_types=1);
 use Illuminate\Mail\Events\MessageSending;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
+use Symfony\Component\Mime\Email;
 use Wnx\Sends\Listeners\AttachSendUuidListener;
 
 it('attaches send uuid header', function () {
-    $event = new MessageSending(new Swift_Message());
+    $event = new MessageSending(new Email());
 
     (new AttachSendUuidListener())->handle($event);
 

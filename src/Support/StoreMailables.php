@@ -7,14 +7,14 @@ namespace Wnx\Sends\Support;
 use Illuminate\Support\Collection;
 use ReflectionClass;
 use ReflectionProperty;
-use Swift_Message;
+use Symfony\Component\Mime\Email;
 use Wnx\Sends\Contracts\HasSends;
 
 trait StoreMailables
 {
     protected function storeClassName(): self
     {
-        $this->withSwiftMessage(function (Swift_Message $message) {
+        $this->withSymfonyMessage(function (Email $message) {
             $message->getHeaders()->addTextHeader(config('sends.headers.mail_class'), encrypt(self::class));
         });
 
@@ -46,7 +46,7 @@ trait StoreMailables
             ])
             ->toJson();
 
-        $this->withSwiftMessage(function (Swift_Message $message) use ($models) {
+        $this->withSymfonyMessage(function (Email $message) use ($models) {
             $message->getHeaders()->addTextHeader(config('sends.headers.models'), encrypt($models));
         });
 

@@ -101,6 +101,9 @@ it('stores fqn of mail class in database table', function () {
     assertDatabaseHas('sends', [
         'mail_class' => TestMailWithMailClassHeader::class,
         'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
 });
@@ -133,6 +136,9 @@ it('attaches related models to a send model by passing arguments to associateWit
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
@@ -156,6 +162,9 @@ it('attaches related models to a send model based on the public properties of th
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseHas('sendables', [
@@ -174,6 +183,9 @@ it('attaches related models only once if related models are defined both as publ
     assertDatabaseHas('sends', [
         'mail_class' => null,
         'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
     assertDatabaseCount('sendables', 1);
@@ -211,6 +223,8 @@ it('stores outgoing notifications in database table', function () {
         'mail_class' => null,
         'subject' => '::subject-of-notification::',
         'to' => json_encode(['foo@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
         ['sent_at', '!=', null],
     ]);
 });

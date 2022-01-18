@@ -11,8 +11,6 @@ use Wnx\Sends\Listeners\AttachSendUuidListener;
 it('attaches send uuid header', function () {
     $event = new MessageSending(new Email());
 
-    // $event = new MessageSending(new Swift_Message());
-
     (new AttachSendUuidListener())->handle($event);
 
     assertTrue($event->message->getHeaders()->has('X-Laravel-Send-UUID'));

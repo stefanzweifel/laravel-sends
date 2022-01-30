@@ -24,7 +24,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.4",
         "nunomaduro/collision": "^5.10 |^6.0",
-        "nunomaduro/larastan": "^1.0",
+        "nunomaduro/larastan": "^2.0",
         "orchestra/testbench": "^7",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
@@ -51,7 +51,11 @@
         "test-coverage": "vendor/bin/pest coverage"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

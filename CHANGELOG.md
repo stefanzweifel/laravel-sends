@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.1.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.1.1...HEAD)
+
+## [v2.1.1](https://github.com/stefanzweifel/laravel-sends/compare/v2.1.0...v2.1.1) - 2022-03-17
+
+## Fixed
+
+- Allow consumers to use their own Send Factory for their custom Send Model ([#9](https://github.com/stefanzweifel/laravel-sends/pull/9))
 
 ## [v2.1.0](https://github.com/stefanzweifel/laravel-sends/compare/v2.0.1...v2.1.0) - 2022-01-18
 

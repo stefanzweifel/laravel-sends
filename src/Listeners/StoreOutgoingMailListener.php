@@ -26,7 +26,20 @@ class StoreOutgoingMailListener
 
     protected function createSendModel(MessageSent $event): Send
     {
-        return config('sends.send_model')::create([
+        return config('sends.send_model')::forceCreate(
+            $this->getSendAttributes($event, $this->getDefaultSendAttributes($event))
+        );
+    }
+
+    protected function getSendAttributes(MessageSent $event, array $defaultAttributes): array
+    {
+        // Implement this method in your own application to override the attributes stored in the Send Model.
+        return $defaultAttributes;
+    }
+
+    protected function getDefaultSendAttributes(MessageSent $event): array
+    {
+        return [
             'uuid' => $this->getSendUuid($event),
             'mail_class' => $this->getMailClassHeaderValue($event),
             'subject' => $event->message->getSubject(),
@@ -37,7 +50,7 @@ class StoreOutgoingMailListener
             'cc' => $this->getAddressesValue($event->message->getCc()),
             'bcc' => $this->getAddressesValue($event->message->getBcc()),
             'sent_at' => now(),
-        ]);
+        ];
     }
 
     protected function getSendUuid(MessageSent $event): ?string

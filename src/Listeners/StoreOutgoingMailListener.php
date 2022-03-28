@@ -119,7 +119,7 @@ class StoreOutgoingMailListener
      * @param array<Address> $address
      * @return Collection|null
      */
-    private function getAddressesValue(array $address): ?Collection
+    protected function getAddressesValue(array $address): ?Collection
     {
         $addresses = collect($address)
             ->flatMap(fn (Address $address) => [$address->getAddress() => $address->getName() === '' ? null : $address->getName()]);

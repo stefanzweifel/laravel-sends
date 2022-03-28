@@ -263,6 +263,44 @@ By default, the package does not store the content of sent out emails. By settin
 SENDS_STORE_CONTENT=true
 ``` 
 
+### Customize Attributes stored in Send Models
+
+If you need to store more attributes with your `Send`-model, you can extend the `StoreOutgoingMailListener` and override the `getSendAttributes`-method.
+
+For example, let's say we would like to store an `audience`-value with each sent out email. We create a new Event Listtener called `CustomStoreOutgoingMailListener` and use the class a as Listener to the `MessageSent`-event.
+
+Our `EventServiceProvider` would look like this.
+
+```php
+// app/Providers/EventServiceProvider.php
+protected $listen = [
+    // ...
+    \Illuminate\Mail\Events\MessageSent::class => [
+        \App\Listeners\CustomStoreOutgoingMailListener::class,
+    ],
+]
+```
+
+The Listener itself would look like the code below. We extend `Wnx\Sends\Listeners\StoreOutgoingMailListener` and override `getSendAttributes`. We merge the `$defaultAttributes` with our custom attributes we want to store. In our example we store an `audience` value.
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use Illuminate\Mail\Events\MessageSent;
+use Wnx\Sends\Listeners\StoreOutgoingMailListener;
+
+class CustomStoreOutgoingMailListener extends StoreOutgoingMailListener
+{
+    protected function getSendAttributes(MessageSent $event, array $defaultAttributes): array
+    {
+        return array_merge($defaultAttributes, [
+            'audience' => $this->getAudience($event),
+        ]);
+    }
+```
+
 ### Prune Send Models
 
 By default, `Send`-models are kept forever in your database. If your application sends thousands of emails per day, you might want to prune records after a couple of days or months.

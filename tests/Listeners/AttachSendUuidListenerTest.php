@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Mail\Events\MessageSending;
+
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
+
 use Symfony\Component\Mime\Email;
 use Wnx\Sends\Listeners\AttachSendUuidListener;
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use function PHPUnit\Framework\assertTrue;
+
 use Wnx\Sends\Models\Send;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeader;
 

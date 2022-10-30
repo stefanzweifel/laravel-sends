@@ -73,13 +73,13 @@ trait StoreMailables
             ->when(count($models) === 0, function (Collection $collection) {
                 $publicPropertyWithHasSends = collect((new ReflectionClass($this))
                     ->getProperties(ReflectionProperty::IS_PUBLIC))
-                    ->map(fn(ReflectionProperty $property) => $property->getValue($this))
-                    ->filter(fn($propertyValue) => $propertyValue instanceof HasSends);
+                    ->map(fn (ReflectionProperty $property) => $property->getValue($this))
+                    ->filter(fn ($propertyValue) => $propertyValue instanceof HasSends);
 
                 return $collection->merge($publicPropertyWithHasSends);
             })
             ->unique()
-            ->map(fn(HasSends $model) => [
+            ->map(fn (HasSends $model) => [
                 'model' => get_class($model),
                 'id' => $model->getKey(),
             ]);

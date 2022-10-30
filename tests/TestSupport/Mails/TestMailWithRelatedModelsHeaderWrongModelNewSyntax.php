@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 use Wnx\Sends\Support\StoreMailables;
+use Wnx\Sends\Tests\TestSupport\Models\TestModelWithoutHasSendsContract;
 
 class TestMailWithRelatedModelsHeaderWrongModelNewSyntax extends Mailable
 {
@@ -49,8 +50,8 @@ class TestMailWithRelatedModelsHeaderWrongModelNewSyntax extends Mailable
     {
         return new Headers(
             text: array_merge(
-                ['X-Custom-Header' => 'Custom Value',],
-                // associateWith([$this->testModel])
+                ['X-Custom-Header' => 'Custom Value'],
+                $this->getAssociateWithHeader($this->testModel),
             ),
         );
     }

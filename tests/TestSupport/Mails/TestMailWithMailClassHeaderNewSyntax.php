@@ -48,7 +48,7 @@ class TestMailWithMailClassHeaderNewSyntax extends Mailable
         return new Headers(
             text: array_merge(
                 ['X-Custom-Header' => 'Custom Value'],
-                $this->getClassNameHeader(),
+                $this->getClassNameHeader()->toArray(),
                 // storeClassName
                 // $this->storeClassName()->headers->all()
             ),

@@ -6,6 +6,7 @@ namespace Wnx\Sends\Tests\TestSupport\Mails;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Headers;
@@ -21,6 +22,8 @@ class TestMailNewSyntax extends Mailable
     public function envelope()
     {
         return new Envelope(
+            from: new Address(address: 'from@example.com', name: 'From'),
+            replyTo: [new Address(address: 'reply@example.com', name: 'Reply')],
             subject: '::subject::',
         );
     }
@@ -32,19 +35,6 @@ class TestMailNewSyntax extends Mailable
     {
         return new Content(
             view: 'emails.test',
-        );
-    }
-
-    /**
-     * @return \Illuminate\Mail\Mailables\Headers
-     */
-    public function headers()
-    {
-        return new Headers(
-            text: array_merge(
-                ['X-Custom-Header' => 'Custom Value',],
-                // $this->storeClassName()->headers->all()
-            ),
         );
     }
 }

@@ -50,9 +50,8 @@ class TestMailWithPublicPropertiesNewSyntax extends Mailable
     {
         return new Headers(
             text: array_merge(
-                ['X-Custom-Header' => 'Custom Value',],
-                // associateWith
-                // $this->storeClassName()->headers->all()
+                ['X-Custom-Header' => 'Custom Value'],
+                $this->getAssociateWithHeader(),
             ),
         );
     }

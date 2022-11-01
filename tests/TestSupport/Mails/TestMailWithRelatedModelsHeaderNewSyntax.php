@@ -51,7 +51,7 @@ class TestMailWithRelatedModelsHeaderNewSyntax extends Mailable
         return new Headers(
             text: array_merge(
                 ['X-Custom-Header' => 'Custom Value'],
-                $this->getAssociateWithHeader([$this->testModel]),
+                $this->getAssociateWithHeader([$this->testModel])->toArray(),
             ),
         );
     }

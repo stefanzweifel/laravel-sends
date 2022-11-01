@@ -49,8 +49,6 @@ class TestMailWithMailClassHeaderNewSyntax extends Mailable
             text: array_merge(
                 ['X-Custom-Header' => 'Custom Value'],
                 $this->getClassNameHeader()->toArray(),
-                // storeClassName
-                // $this->storeClassName()->headers->all()
             ),
         );
     }

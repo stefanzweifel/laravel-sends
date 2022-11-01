@@ -56,7 +56,7 @@ trait StoreMailables
      * @return Collection
      * @throws \ReflectionException
      */
-    protected function getCollectionOfAssociatedModels(array $models): Collection
+    private function getCollectionOfAssociatedModels(array $models): Collection
     {
         return collect($models)
             ->when(count($models) === 0, function (Collection $collection) {

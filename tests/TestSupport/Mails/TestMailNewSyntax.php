@@ -10,13 +10,11 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Wnx\Sends\Support\StoreMailables;
 
 class TestMailNewSyntax extends Mailable
 {
     use Queueable;
     use SerializesModels;
-    use StoreMailables;
 
     public function envelope()
     {

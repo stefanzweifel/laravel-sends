@@ -50,10 +50,10 @@ class TestMailWithRelatedModelsHeaderPassAsArgumentsNewSyntax extends Mailable
     public function headers()
     {
         return new Headers(
-            text: array_merge(
-                ['X-Custom-Header' => 'Custom Value'],
-                $this->getAssociateWithHeader($this->testModel, $this->anotherTestModel)->toArray(),
-            ),
+            text: [
+                'X-Custom-Header' => 'Custom Value',
+                ...$this->getAssociateWithHeader($this->testModel, $this->anotherTestModel)->toArray(),
+            ],
         );
     }
 }

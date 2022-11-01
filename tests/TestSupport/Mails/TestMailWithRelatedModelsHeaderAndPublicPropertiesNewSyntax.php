@@ -51,10 +51,10 @@ class TestMailWithRelatedModelsHeaderAndPublicPropertiesNewSyntax extends Mailab
     public function headers()
     {
         return new Headers(
-            text: array_merge(
-                ['X-Custom-Header' => 'Custom Value'],
-                $this->getAssociateWithHeader([$this->testModel])->toArray(),
-            ),
+            text: [
+                'X-Custom-Header' => 'Custom Value',
+                ...$this->getAssociateWithHeader([$this->testModel])->toArray(),
+            ],
         );
     }
 }

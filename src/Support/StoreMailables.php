@@ -10,20 +10,24 @@ use ReflectionClass;
 use ReflectionProperty;
 use Symfony\Component\Mime\Email;
 use Wnx\Sends\Contracts\HasSends;
+use Wnx\Sends\Header;
 
 trait StoreMailables
 {
-    protected function getClassNameHeader(): array
+    protected function getClassNameHeader(): Header
     {
-        return [
-            config('sends.headers.mail_class') => encrypt(self::class),
-        ];
+        return new Header(
+            name: config('sends.headers.mail_class'),
+            value: encrypt(self::class)
+        );
     }
 
     protected function storeClassName(): self
     {
         $this->withSymfonyMessage(function (Email $message) {
-            $message->getHeaders()->addTextHeader(config('sends.headers.mail_class'), encrypt(self::class));
+            $header = $this->getClassNameHeader();
+
+            $message->getHeaders()->addTextHeader($header->getName(), $header->getValue());
         });
 
         return $this;
@@ -32,7 +36,6 @@ trait StoreMailables
     /**
      * @param array<HasSends>|HasSends $models
      * @return StoreMailables
-     * @throws \ReflectionException
      */
     protected function associateWith(array|HasSends $models = []): static
     {
@@ -50,16 +53,17 @@ trait StoreMailables
 
     /**
      * @param array<HasSends>|HasSends $models
-     * @return array
+     * @return Header
      * @throws \ReflectionException
      */
-    protected function getAssociateWithHeader(array|HasSends $models = []): array
+    protected function getAssociateWithHeader(array|HasSends $models = []): Header
     {
         $models = $models instanceof HasSends ? func_get_args() : $models;
 
-        return [
-            config('sends.headers.models') => encrypt($this->getCollectionOfAssociatedModels($models)->toJson()),
-        ];
+        return new Header(
+            name: config('sends.headers.models'),
+            value: encrypt($this->getCollectionOfAssociatedModels($models)->toJson()),
+        );
     }
 
     /**

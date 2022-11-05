@@ -10,12 +10,20 @@ use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 
 use Wnx\Sends\Tests\TestSupport\Mails\TestMail;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailNewSyntax;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeader;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeaderNewSyntax;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithPublicProperties;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithPublicPropertiesNewSyntax;
+
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeader;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderAndPublicProperties;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderAndPublicPropertiesNewSyntax;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderNewSyntax;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderPassAsArguments;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderPassAsArgumentsNewSyntax;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderWrongModel;
+use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderWrongModelNewSyntax;
 use Wnx\Sends\Tests\TestSupport\Models\AnotherTestModel;
 use Wnx\Sends\Tests\TestSupport\Models\TestModel;
 use Wnx\Sends\Tests\TestSupport\Models\TestModelWithoutHasSendsContract;
@@ -258,4 +266,203 @@ it('stores content of outgoing mail in database table if config is set to true',
     ]);
 
     assertDatabaseCount('sendables', 0);
+});
+
+
+// New Laravel Mail Syntax
+
+it('stores outgoing mails in database table that use new syntax', function () {
+    Mail::to([
+        [
+            'email' => 'to-1@example.com',
+            'name' => 'To 1 Name',
+        ],
+        'to-2@example.com',
+    ])
+        ->send(new TestMailNewSyntax());
+
+    assertDatabaseHas('sends', [
+        'uuid' => null,
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode([
+            'to-1@example.com' => 'To 1 Name',
+            'to-2@example.com' => null,
+        ]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+
+    assertDatabaseCount('sendables', 0);
+});
+
+it('stores to cc and bcc addresses in database table when mailable uses new syntax', function () {
+    Mail::to('test@example.com')
+        ->cc([
+            'cc-1@example.com',
+            [
+                'email' => 'cc-2@example.com',
+                'name' => 'CC Name 2',
+            ],
+        ])
+        ->bcc([
+            'bcc-1@example.com',
+            [
+                'email' => 'bcc-2@example.com',
+                'name' => 'BCC Name 2',
+            ],
+        ])
+        ->send(new TestMailNewSyntax());
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'from' => json_encode(['from@example.com' => 'From']),
+        'reply_to' => json_encode(['reply@example.com' => 'Reply']),
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => json_encode([
+            'cc-1@example.com' => null,
+            'cc-2@example.com' => 'CC Name 2',
+        ]),
+        'bcc' => json_encode([
+            'bcc-1@example.com' => null,
+            'bcc-2@example.com' => 'BCC Name 2',
+        ]),
+        ['sent_at', '!=', null],
+    ]);
+});
+
+it('stores send uuid in database table when mailable uses new syntax', function () {
+    $this->addSendUuidHeaderToMail();
+
+    Mail::to('test@example.com')
+        ->send(new TestMailNewSyntax());
+
+    assertDatabaseHas('sends', [
+        ['uuid', '!=', null],
+        'mail_class' => null,
+        'subject' => '::subject::',
+    ]);
+});
+
+it('stores fqn of mail class in database table if new syntax is used', function () {
+    Mail::to('test@example.com')
+        ->send(new TestMailWithMailClassHeaderNewSyntax());
+
+    assertDatabaseHas('sends', [
+        'mail_class' => TestMailWithMailClassHeaderNewSyntax::class,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+});
+
+it('attaches related models to a send model if respective header is present and new syntax is used', function () {
+    $testModel = TestModel::create();
+
+    Mail::to('test@example.com')
+        ->send(new TestMailWithRelatedModelsHeaderNewSyntax($testModel));
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModel::class,
+        'sendable_id' => 1,
+    ]);
+});
+
+it('attaches related models to a send model by passing arguments to associateWith method and mailable uses new syntax', function () {
+    $testModel = TestModel::create();
+    $anotherTestModel = AnotherTestModel::create();
+
+    Mail::to('test@example.com')
+        ->send(new TestMailWithRelatedModelsHeaderPassAsArgumentsNewSyntax($testModel, $anotherTestModel));
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModel::class,
+        'sendable_id' => 1,
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => AnotherTestModel::class,
+        'sendable_id' => 2,
+    ]);
+});
+
+it('attaches related models to a send model based on the public properties of the mail class and mailable uses new syntax', function () {
+    $testModel = TestModel::create();
+
+    Mail::to('test@example.com')
+        ->send(new TestMailWithPublicPropertiesNewSyntax($testModel));
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModel::class,
+        'sendable_id' => 1,
+    ]);
+});
+
+it('attaches related models only once if related models are defined both as public properties and through the method and when mailable uses new syntax', function () {
+    $testModel = TestModel::create();
+
+    Mail::to('test@example.com')
+        ->send(new TestMailWithRelatedModelsHeaderAndPublicPropertiesNewSyntax($testModel));
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+    assertDatabaseCount('sendables', 1);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModel::class,
+        'sendable_id' => 1,
+    ]);
+});
+
+it('throws type error if related model does not implement HasSends contract and mailable uses new syntax', function () {
+    expect(function () {
+        $testModel = TestModelWithoutHasSendsContract::create();
+        Mail::to('test@example.com')
+            ->send(new TestMailWithRelatedModelsHeaderWrongModelNewSyntax($testModel));
+    })->toThrow(TypeError::class);
+
+    assertDatabaseCount('sends', 0);
+    assertDatabaseCount('sendables', 0);
+    assertDatabaseMissing('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModelWithoutHasSendsContract::class,
+        'sendable_id' => 1,
+    ]);
 });

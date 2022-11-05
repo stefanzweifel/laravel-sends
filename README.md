@@ -128,8 +128,10 @@ Read further to learn how to store the name and how to associate models with a M
 By default the Event Listener stores the mails subject and the recipient adresses. That's nice, but we can do better.
 It can be beneficial for your application to know which Mailable class triggered the sent email. 
 
-To store this information, add the `StoreMailables`-trait to your Mailable classes like below.
-Then call the `storeClassName()`-method inside the `build`-method.
+To store this information, add the `StoreMailables`-trait to your Mailable classes like below. You now have access to a couple of helper methods.
+
+Depending on how you write Mailables, there a different ways to use these new methods.
+Call the `storeClassName`-method inside the `build`-method of your Mailable.
 
 ```php
 class ProductReviewMail extends Mailable
@@ -147,6 +149,42 @@ class ProductReviewMail extends Mailable
             ->storeClassName()
             ->view('emails.products.review')
             ->subject("$this->product->name waits for your review");
+    }
+}
+```
+
+If you use the Mailable syntax introduced in Laravel v9.35, you can either use `$this->storeClassName()` in the `headers`-method or pass `$this->getMailClassHeader()->toArray()` to the `Header` object.
+
+```php
+class ProductReviewMail extends Mailable
+{
+    use SerializesModels;
+    use StoreMailables;
+
+    public function __construct(
+        public User $user,
+        public Product $product
+    ) { }
+
+    // ...
+
+    /**
+     * @return \Illuminate\Mail\Mailables\Headers
+     */
+    public function headers()
+    {
+        // Call storeClassName() and let the package take care of adding the
+        // header to the outgoing mail.
+        $this->storeClassName();
+
+        // Or – if you want more control – use the getMailClassHeader() method
+        // to get a Header instance and merge it with your own headers.
+        return new Headers(
+            text: [
+                'X-Custom-Header' => 'Custom Value',
+                ...$this->getMailClassHeader()->toArray(),
+            ],
+        );
     }
 }
 ```
@@ -180,9 +218,10 @@ class ProductReviewMail extends Mailable
     use SerializesModels;
     use StoreMailables;
 
-    public function __construct(private User $user, private Product $product)
-    {
-    }
+    public function __construct(
+        private User $user,
+        private Product $product
+    ) { }
 
     public function build()
     {
@@ -196,7 +235,45 @@ class ProductReviewMail extends Mailable
 }
 ```
 
-You can now access the sent out emails from the product's `send`-relationship.
+If you're using the Mailable syntax introduced in Laravel v9.35, you can call `associateWith()` or `getMailModelsHeader()` in the `headers`-method too.
+
+```php
+class ProductReviewMail extends Mailable
+{
+    use SerializesModels;
+    use StoreMailables;
+
+    public function __construct(
+        private User $user,
+        private Product $product
+    ) { }
+
+    // ...
+
+    /**
+     * @return \Illuminate\Mail\Mailables\Headers
+     */
+    public function headers()
+    {
+        // Call associateWith() and the package automatically associates the public
+        // properties with this mailable.
+        $this->associateWith($this->product);
+        $this->associateWith([$this->product]);
+
+        // Or – if you want more control – use the getMailModelsHeader() method
+        // to get a Header instance and merge it with your own headers.
+        return new Headers(
+            text: [
+                'X-Custom-Header' => 'Custom Value',
+                ...$this->getMailModelsHeader($this->product)->toArray(),
+                ...$this->getMailModelsHeader([$this->product])->toArray(),
+            ],
+        );
+    }
+}
+```
+
+You can now access the sent out emails from the product's `sends`-relationship.
 
 ```php
 $product->sends()->get();
@@ -225,6 +302,42 @@ class ProductReviewMail extends Mailable
             ->associateWith()
             ->view('emails.products.review')
             ->subject("$this->user->name, $this->product->name waits for your review");
+    }
+}
+```
+
+If you're using the Mailable syntax introduced in Laravel v9.35, you can call `associateWith()` or `getMailModelsHeader()` in the `headers`-method.
+
+```php
+class ProductReviewMail extends Mailable
+{
+    use SerializesModels;
+    use StoreMailables;
+
+    public function __construct(
+        private User $user,
+        public Product $product
+    ) { }
+
+    // ...
+
+    /**
+     * @return \Illuminate\Mail\Mailables\Headers
+     */
+    public function headers()
+    {
+        // Call associateWith() and the package automatically associates the public
+        // properties with this mailable.
+        $this->associateWith();
+
+        // Or – if you want more control – use the getMailModelsHeader() method
+        // to get a Header instance and merge it with your own headers.
+        return new Headers(
+            text: [
+                'X-Custom-Header' => 'Custom Value',
+                ...$this->getMailModelsHeader()->toArray(),
+            ],
+        );
     }
 }
 ```
@@ -267,7 +380,7 @@ SENDS_STORE_CONTENT=true
 
 If you need to store more attributes with your `Send`-model, you can extend the `StoreOutgoingMailListener` and override the `getSendAttributes`-method.
 
-For example, let's say we would like to store an `audience`-value with each sent out email. We create a new Event Listtener called `CustomStoreOutgoingMailListener` and use the class a as Listener to the `MessageSent`-event.
+For example, let's say we would like to store an `audience`-value with each sent out email. We create a new Event Listener called `CustomStoreOutgoingMailListener` and use the class as Listener to the `MessageSent`-event.
 
 Our `EventServiceProvider` would look like this.
 
@@ -281,7 +394,7 @@ protected $listen = [
 ]
 ```
 
-The Listener itself would look like the code below. We extend `Wnx\Sends\Listeners\StoreOutgoingMailListener` and override `getSendAttributes`. We merge the `$defaultAttributes` with our custom attributes we want to store. In our example we store an `audience` value.
+The Listener itself would look like the code below. We extend `Wnx\Sends\Listeners\StoreOutgoingMailListener` and override `getSendAttributes`. We merge the `$defaultAttributes` with our custom attributes we want to store. In the example below we store an `audience` value.
 
 ```php
 <?php

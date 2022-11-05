@@ -14,7 +14,7 @@ use Wnx\Sends\Header;
 
 trait StoreMailables
 {
-    protected function storeClassName(): self
+    public function storeClassName(): self
     {
         $this->withSymfonyMessage(function (Email $message) {
             $header = $this->getClassNameHeader();
@@ -25,7 +25,7 @@ trait StoreMailables
         return $this;
     }
 
-    protected function getClassNameHeader(): Header
+    public function getClassNameHeader(): Header
     {
         return new Header(
             name: config('sends.headers.mail_class'),
@@ -37,7 +37,7 @@ trait StoreMailables
      * @param array<HasSends>|HasSends $models
      * @return StoreMailables
      */
-    protected function associateWith(array|HasSends $models = []): static
+    public function associateWith(array|HasSends $models = []): static
     {
         $models = $models instanceof HasSends ? func_get_args() : $models;
 
@@ -79,7 +79,7 @@ trait StoreMailables
      * @return Header
      * @throws \ReflectionException
      */
-    protected function getAssociateWithHeader(array|HasSends $models = []): Header
+    public function getAssociateWithHeader(array|HasSends $models = []): Header
     {
         $models = $models instanceof HasSends ? func_get_args() : $models;
 

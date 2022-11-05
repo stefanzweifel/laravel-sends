@@ -153,7 +153,7 @@ class ProductReviewMail extends Mailable
 }
 ```
 
-If you use the Mailable syntax introduced in Laravel v9.35, you can either use `$this->storeClassName()` in the `headers`-method or pass `$this->getClassNameHeader()->toArray()` to the `Header` object.
+If you use the Mailable syntax introduced in Laravel v9.35, you can either use `$this->storeClassName()` in the `headers`-method or pass `$this->getMailClassHeader()->toArray()` to the `Header` object.
 
 ```php
 class ProductReviewMail extends Mailable
@@ -177,12 +177,12 @@ class ProductReviewMail extends Mailable
         // header to the outgoing mail.
         $this->storeClassName();
 
-        // Or – if you want more control – use the getClassNameHeader() method
+        // Or – if you want more control – use the getMailClassHeader() method
         // to get a Header instance and merge it with your own headers.
         return new Headers(
             text: [
                 'X-Custom-Header' => 'Custom Value',
-                ...$this->getClassNameHeader()->toArray(),
+                ...$this->getMailClassHeader()->toArray(),
             ],
         );
     }
@@ -235,7 +235,7 @@ class ProductReviewMail extends Mailable
 }
 ```
 
-If you're using the Mailable syntax introduced in Laravel v9.35, you can call `associateWith()` or `getAssociateWithHeader()` in the `headers`-method too.
+If you're using the Mailable syntax introduced in Laravel v9.35, you can call `associateWith()` or `getMailModelsHeader()` in the `headers`-method too.
 
 ```php
 class ProductReviewMail extends Mailable
@@ -260,13 +260,13 @@ class ProductReviewMail extends Mailable
         $this->associateWith($this->product);
         $this->associateWith([$this->product]);
 
-        // Or – if you want more control – use the getAssociateWithHeader() method
+        // Or – if you want more control – use the getMailModelsHeader() method
         // to get a Header instance and merge it with your own headers.
         return new Headers(
             text: [
                 'X-Custom-Header' => 'Custom Value',
-                ...$this->getAssociateWithHeader($this->product)->toArray(),
-                ...$this->getAssociateWithHeader([$this->product])->toArray(),
+                ...$this->getMailModelsHeader($this->product)->toArray(),
+                ...$this->getMailModelsHeader([$this->product])->toArray(),
             ],
         );
     }
@@ -306,7 +306,7 @@ class ProductReviewMail extends Mailable
 }
 ```
 
-If you're using the Mailable syntax introduced in Laravel v9.35, you can call `associateWith()` or `getAssociateWithHeader()` in the `headers`-method.
+If you're using the Mailable syntax introduced in Laravel v9.35, you can call `associateWith()` or `getMailModelsHeader()` in the `headers`-method.
 
 ```php
 class ProductReviewMail extends Mailable
@@ -330,12 +330,12 @@ class ProductReviewMail extends Mailable
         // properties with this mailable.
         $this->associateWith();
 
-        // Or – if you want more control – use the getAssociateWithHeader() method
+        // Or – if you want more control – use the getMailModelsHeader() method
         // to get a Header instance and merge it with your own headers.
         return new Headers(
             text: [
                 'X-Custom-Header' => 'Custom Value',
-                ...$this->getAssociateWithHeader()->toArray(),
+                ...$this->getMailModelsHeader()->toArray(),
             ],
         );
     }

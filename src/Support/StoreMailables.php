@@ -17,7 +17,7 @@ trait StoreMailables
     public function storeClassName(): self
     {
         $this->withSymfonyMessage(function (Email $message) {
-            $header = $this->getClassNameHeader();
+            $header = $this->getMailClassHeader();
 
             $message->getHeaders()->addTextHeader($header->getName(), $header->getValue());
         });
@@ -25,7 +25,7 @@ trait StoreMailables
         return $this;
     }
 
-    public function getClassNameHeader(): Header
+    public function getMailClassHeader(): Header
     {
         return new Header(
             name: config('sends.headers.mail_class'),
@@ -79,7 +79,7 @@ trait StoreMailables
      * @return Header
      * @throws \ReflectionException
      */
-    public function getAssociateWithHeader(array|HasSends $models = []): Header
+    public function getMailModelsHeader(array|HasSends $models = []): Header
     {
         $models = $models instanceof HasSends ? func_get_args() : $models;
 

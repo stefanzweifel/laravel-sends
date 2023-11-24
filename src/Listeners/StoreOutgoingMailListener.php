@@ -59,7 +59,6 @@ class StoreOutgoingMailListener
             return $event->sent->getMessageId();
         }
 
-
         if (! $event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
             return null;
         }

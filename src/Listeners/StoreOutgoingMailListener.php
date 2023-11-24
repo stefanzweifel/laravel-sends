@@ -55,6 +55,11 @@ class StoreOutgoingMailListener
 
     protected function getSendUuid(MessageSent $event): ?string
     {
+        if (config('sends.headers.send_uuid') === 'Message-ID') {
+│           return $event->sent->getMessageId();
+│       }
+
+
         if (! $event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
             return null;
         }

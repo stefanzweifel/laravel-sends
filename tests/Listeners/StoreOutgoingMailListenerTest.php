@@ -104,6 +104,21 @@ it('stores send uuid in database table', function () {
     ]);
 });
 
+it('stores message id in database table as uuid if send_uuid config is set to Message-ID', function () {
+
+    config(['sends.headers.send_uuid' => 'Message-ID']);
+
+    Mail::to('test@example.com')
+        ->send(new TestMail());
+
+    assertDatabaseHas('sends', [
+        ['uuid', 'like', "%@example.com"],
+        'mail_class' => null,
+        'subject' => '::subject::',
+    ]);
+
+});
+
 it('stores fqn of mail class in database table', function () {
     Mail::to('test@example.com')
         ->send(new TestMailWithMailClassHeader());

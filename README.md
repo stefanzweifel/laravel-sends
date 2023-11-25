@@ -76,7 +76,7 @@ This is the contents of the published config file:
 ```php
 return [
     /*
-     * The fully qualified class name of the send model.
+     * The fully qualified class name of the `Send` model.
      */
     'send_model' => \Wnx\Sends\Models\Send::class,
 
@@ -99,6 +99,7 @@ return [
 
         /**
          * Header containing unique ID of the sent out mailable class.
+         * Set this to `Message-ID`, if you want to use the Message ID as the unique ID identifing the sent mail.
          */
         'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
     ],

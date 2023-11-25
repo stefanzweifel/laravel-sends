@@ -25,6 +25,7 @@ return [
 
         /**
          * Header containing unique ID of the sent out mailable class.
+         * Set this to `Message-ID`, if you want to use the Message ID as the unique ID identifing the sent mail.
          */
         'send_uuid' => env('SENDS_HEADERS_SEND_UUID', 'X-Laravel-Send-UUID'),
     ],

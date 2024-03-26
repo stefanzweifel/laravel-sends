@@ -11,10 +11,13 @@ class AttachSendUuidListener
 {
     public function handle(MessageSending $event): void
     {
-        if ($event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
+        /** @var string $sendUuidHeader */
+        $sendUuidHeader = config('sends.headers.send_uuid');
+
+        if ($event->message->getHeaders()->has($sendUuidHeader)) {
             return;
         }
 
-        $event->message->getHeaders()->addTextHeader(config('sends.headers.send_uuid'), Str::uuid()->toString());
+        $event->message->getHeaders()->addTextHeader($sendUuidHeader, Str::uuid()->toString());
     }
 }

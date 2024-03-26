@@ -132,14 +132,15 @@ class StoreOutgoingMailListener
         $modelsArray = json_decode($models, true, 512, JSON_THROW_ON_ERROR);
 
         return collect($modelsArray)
-            ->map(function (array $tuple): Model {
+            ->map(function (array $tuple): ?Model {
                 /** @var Model $model */
                 $model = $tuple['model'];
                 $id = $tuple['id'];
 
-                /** @phpstan-ignore-next-line  */
+                /** @phpstan-var ?Model */
                 return $model::find($id);
             })
+            ->filter()
             ->filter(fn (Model $model) => (new ReflectionClass($model))->implementsInterface(HasSends::class));
     }
 

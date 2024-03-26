@@ -181,6 +181,37 @@ it('attaches related models to a send model by passing arguments to associateWit
     ]);
 });
 
+it('attaches related models to a send model by passing arguments to associateWith method but discard models that no longer exist', function () {
+    $testModel = TestModel::create();
+    $anotherTestModel = AnotherTestModel::create();
+
+    $mailable = new TestMailWithRelatedModelsHeaderPassAsArguments($testModel, $anotherTestModel);
+
+    $testModel->delete();
+
+    Mail::to('test@example.com')
+        ->send($mailable);
+
+    assertDatabaseHas('sends', [
+        'mail_class' => null,
+        'subject' => '::subject::',
+        'to' => json_encode(['test@example.com' => null]),
+        'cc' => null,
+        'bcc' => null,
+        ['sent_at', '!=', null],
+    ]);
+    assertDatabaseMissing('sendables', [
+        'send_id' => 1,
+        'sendable_type' => TestModel::class,
+        'sendable_id' => 1,
+    ]);
+    assertDatabaseHas('sendables', [
+        'send_id' => 1,
+        'sendable_type' => AnotherTestModel::class,
+        'sendable_id' => 2,
+    ]);
+});
+
 it('attaches related models to a send model based on the public properties of the mail class', function () {
     $testModel = TestModel::create();
 

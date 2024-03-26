@@ -26,7 +26,10 @@ class StoreOutgoingMailListener
 
     protected function createSendModel(MessageSent $event): Send
     {
-        return config('sends.send_model')::forceCreate(
+        /** @var Send $modelClass */
+        $modelClass = config('sends.send_model');
+
+        return $modelClass::forceCreate(
             $this->getSendAttributes($event, $this->getDefaultSendAttributes($event))
         );
     }
@@ -55,15 +58,18 @@ class StoreOutgoingMailListener
 
     protected function getSendUuid(MessageSent $event): ?string
     {
-        if (config('sends.headers.send_uuid') === 'Message-ID') {
+        /** @var string $sendUuidHeader */
+        $sendUuidHeader = config('sends.headers.send_uuid');
+
+        if ($sendUuidHeader === 'Message-ID') {
             return $event->sent->getMessageId();
         }
 
-        if (! $event->message->getHeaders()->has(config('sends.headers.send_uuid'))) {
+        if (! $event->message->getHeaders()->has($sendUuidHeader)) {
             return null;
         }
 
-        $headerValue = $event->message->getHeaders()->get(config('sends.headers.send_uuid'));
+        $headerValue = $event->message->getHeaders()->get($sendUuidHeader);
 
         if (is_null($headerValue)) {
             return null;
@@ -74,16 +80,20 @@ class StoreOutgoingMailListener
 
     protected function getMailClassHeaderValue(MessageSent $event): ?string
     {
-        if (! $event->message->getHeaders()->has(config('sends.headers.mail_class'))) {
+        /** @var string $mailClassHeader */
+        $mailClassHeader = config('sends.headers.mail_class');
+
+        if (! $event->message->getHeaders()->has($mailClassHeader)) {
             return null;
         }
 
-        $headerValue = $event->message->getHeaders()->get(config('sends.headers.mail_class'));
+        $headerValue = $event->message->getHeaders()->get($mailClassHeader);
 
         if (is_null($headerValue)) {
             return null;
         }
 
+        /** @phpstan-var string */
         return decrypt($headerValue->getBodyAsString());
     }
 
@@ -93,6 +103,7 @@ class StoreOutgoingMailListener
     protected function attachModelsToSendModel(MessageSent $event, Send $send): void
     {
         $this->getModels($event)
+            /** @phpstan-ignore-next-line  */
             ->each(fn (HasSends $model) => $model->sends()->attach($send));
     }
 
@@ -101,25 +112,35 @@ class StoreOutgoingMailListener
      */
     protected function getModels(MessageSent $event): Collection
     {
-        if (! $event->message->getHeaders()->has(config('sends.headers.models'))) {
+        /** @var string $modelsHeader */
+        $modelsHeader = config('sends.headers.models');
+
+        if (! $event->message->getHeaders()->has($modelsHeader)) {
             return collect([]);
         }
 
-        $headerValue = $event->message->getHeaders()->get(config('sends.headers.models'));
+        $headerValue = $event->message->getHeaders()->get($modelsHeader);
 
         if (is_null($headerValue)) {
             return collect([]);
         }
 
+        /** @var string $models */
         $models = decrypt($headerValue->getBodyAsString());
 
-        return collect(json_decode($models, true, 512, JSON_THROW_ON_ERROR))
-            ->map(function (array $tuple): Model {
+        /** @var array<array<string, mixed>> $modelsArray */
+        $modelsArray = json_decode($models, true, 512, JSON_THROW_ON_ERROR);
+
+        return collect($modelsArray)
+            ->map(function (array $tuple): ?Model {
+                /** @var Model $model */
                 $model = $tuple['model'];
                 $id = $tuple['id'];
 
+                /** @phpstan-var ?Model */
                 return $model::find($id);
             })
+            ->filter()
             ->filter(fn (Model $model) => (new ReflectionClass($model))->implementsInterface(HasSends::class));
     }
 
@@ -129,6 +150,7 @@ class StoreOutgoingMailListener
             return null;
         }
 
+        /** @phpstan-ignore-next-line  */
         return $event->message->getHtmlBody();
     }
 

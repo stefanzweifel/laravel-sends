@@ -113,7 +113,10 @@ class StoreOutgoingMailListener
 
         $models = decrypt($headerValue->getBodyAsString());
 
-        return collect(json_decode($models, true, 512, JSON_THROW_ON_ERROR))
+        /** @var array<array<string, mixed>> $modelsArray */
+        $modelsArray = json_decode($models, true, 512, JSON_THROW_ON_ERROR);
+
+        return collect($modelsArray)
             ->map(function (array $tuple): Model {
                 $model = $tuple['model'];
                 $id = $tuple['id'];

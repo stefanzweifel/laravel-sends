@@ -78,7 +78,7 @@ class Send extends Model
         'rejected_at' => 'immutable_datetime',
     ];
 
-    protected static function newFactory()
+    protected static function newFactory(): SendFactory
     {
         return new SendFactory();
     }

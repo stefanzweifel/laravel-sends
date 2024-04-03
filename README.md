@@ -258,7 +258,7 @@ class ProductReviewMail extends Mailable
     {
         // Call associateWith() and the package automatically associates the public
         // properties with this mailable.
-        $this->associateWith($this->product);
+        $this->associateWith($this->user);
         $this->associateWith([$this->product]);
 
         // Or – if you want more control – use the getMailModelsHeader() method
@@ -266,7 +266,7 @@ class ProductReviewMail extends Mailable
         return new Headers(
             text: [
                 'X-Custom-Header' => 'Custom Value',
-                ...$this->getMailModelsHeader($this->product)->toArray(),
+                ...$this->getMailModelsHeader($this->user)->toArray(),
                 ...$this->getMailModelsHeader([$this->product])->toArray(),
             ],
         );

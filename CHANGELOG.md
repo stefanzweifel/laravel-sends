@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.4.2...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.5.0...HEAD)
+
+## [v2.5.0](https://github.com/stefanzweifel/laravel-sends/compare/v2.4.2...v2.5.0) - 2024-10-14
+
+### Changed
+
+- Change getMailClassHeader return value from self to static ([#23](https://github.com/stefanzweifel/laravel-sends/pull/23))
+
+### Fixed
+
+- Increase Phpstan Level to 9 ([#21](https://github.com/stefanzweifel/laravel-sends/pull/21))
+- Corrected User Association in Readme ([#22](https://github.com/stefanzweifel/laravel-sends/pull/22))
 
 ## [v2.4.2](https://github.com/stefanzweifel/laravel-sends/compare/v2.4.1...v2.4.2) - 2024-02-03
 

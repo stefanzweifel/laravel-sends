@@ -29,7 +29,7 @@ trait StoreMailables
     {
         return new Header(
             name: config('sends.headers.mail_class'),
-            value: encrypt(self::class)
+            value: encrypt(static::class)
         );
     }
 

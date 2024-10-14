@@ -15,7 +15,6 @@ use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeader;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithMailClassHeaderNewSyntax;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithPublicProperties;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithPublicPropertiesNewSyntax;
-
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeader;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderAndPublicProperties;
 use Wnx\Sends\Tests\TestSupport\Mails\TestMailWithRelatedModelsHeaderAndPublicPropertiesNewSyntax;

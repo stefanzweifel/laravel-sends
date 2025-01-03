@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.6.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.6.1...HEAD)
+
+## [v2.6.1](https://github.com/stefanzweifel/laravel-sends/compare/v2.6.0...v2.6.1) - 2025-01-03
+
+### Fixed
+
+- Fix compatibility with HasFactory ([#25](https://github.com/stefanzweifel/laravel-sends/pull/25))
 
 ## [v2.6.0](https://github.com/stefanzweifel/laravel-sends/compare/v2.5.0...v2.6.0) - 2024-11-13
 

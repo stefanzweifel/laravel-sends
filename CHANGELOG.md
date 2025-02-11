@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.6.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/laravel-sends/compare/v2.7.0...HEAD)
+
+## [v2.7.0](https://github.com/stefanzweifel/laravel-sends/compare/v2.6.1...v2.7.0) - 2025-02-11
+
+### Added
+
+- Add Support for Laravel 12 ([#26](https://github.com/stefanzweifel/laravel-sends/pull/26))
+
+### Changed
+
+- Remove Support for Laravel 9 and Laravel 10 ([#26](https://github.com/stefanzweifel/laravel-sends/pull/26))
+- Remove Support for PHP 8.0, PHP 8.1 and PHP 8.2 ([#26](https://github.com/stefanzweifel/laravel-sends/pull/26))
 
 ## [v2.6.1](https://github.com/stefanzweifel/laravel-sends/compare/v2.6.0...v2.6.1) - 2025-01-03
 

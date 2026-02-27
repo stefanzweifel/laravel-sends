@@ -19,13 +19,13 @@
     "require": {
         "php": "^8.3",
         "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^11.0 | ^12.0"
+        "illuminate/contracts": "^11.0 | ^12.0 | ^13.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.4",
         "larastan/larastan": "^3.0",
         "nunomaduro/collision": "^7.0 | ^8.0",
-        "orchestra/testbench": "^9 | ^10",
+        "orchestra/testbench": "^9 | ^10 | ^11",
         "pestphp/pest": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.0"
     },
